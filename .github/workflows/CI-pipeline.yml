@@ -8,23 +8,23 @@ on:
 
 jobs:
   build_test:
-    runs-on:ubuntu-latest
+    runs-on: ubuntu-latest
 
     steps:
-      # Checkout code from dev branch
       - name: checkout code
         uses: actions/checkout@v5.0.0
 
       - name: setup node.js
-        uses:actions/setup-node2@v4
+        uses: actions/setup-node2@v4
         with:
           node-version: 18
 
-       - name: install dependencies
-         run: npm install
+      - name: install dependencies
+        run: npm install
+          
 
-        - name: run tests
-          run: 
+      - name: run tests
+        run: 
             mkdir -p test-results
             npm test -- --reporter mocha-junit-reporter --reporter-options mochaFile=./test-results/results.xml
  
