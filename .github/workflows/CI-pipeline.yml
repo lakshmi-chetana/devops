@@ -1,72 +1,58 @@
-name: CI pipeline with security and Quality Scans
-
+name: CI Pipeline with Security & Quality Scans
+ 
 on:
   push:
     branches: [dev]
   pull_request:
     branches: [dev]
-
+ 
 jobs:
   build_test:
     runs-on: ubuntu-latest
-
+ 
     steps:
+      # checkout code from the dev branch
       - name: checkout code
         uses: actions/checkout@v5.0.0
-
+ 
       - name: setup node.js
         uses: actions/setup-node@v4
         with:
           node-version: 18
-
-      - name: install dependencies
+ 
+      - name: install dependecies
         run: npm install
-          
-
+ 
       - name: run tests
-        run: 
-            mkdir -p test-results
-            npm test -- --reporter mocha-junit-reporter --reporter-options mochaFile=./test-results/results.xml
-            
+        run: |
+          mkdir -p test-results
+          npm test -- --reporter mocha-junit-reporter --reporter-options mochaFile=./test-results/results.xml
+ 
       - name: publish test results
         if: always()
         uses: actions/upload-artifact@v4.6.2
         with:
-          name: test-results-artifact
+          name: test-results-artifact        
           path: test-results/results.xml
-
+ 
       - name: run code quality using eslint
-        run:
+        run: |
           set -o pipefail
           npx eslint . --ext .js --exit-on-fatal-error -f stylish | tee lint-report.txt
-
+ 
       - name: publish eslint code quality tests
         if: always()
         uses: actions/upload-artifact@v4.6.2
         with:
-          name: eslint-code-quality-artifact
+          name: eslint-code-quality-artifact        
           path: lint-report.txt
-
+ 
       - name: run dependency scanning
         run: npm audit --audit-level=high --json > npm-audit-report.json
-
-      - name: dependency
+ 
+      - name: publish dependency scanning tests
         if: always()
         uses: actions/upload-artifact@v4.6.2
         with:
-          name: dependency-scaning-artifact
-          path: npm-audit-report.json
-
-
-        
-
-            
-
-      
-
-      
- 
-
-      
-    
-  
+          name: dependency-scanning-artifact        
+          path: npm-audit-report.json        
