@@ -1,4 +1,4 @@
-FROM node:18-alpine
+FROM node:current-apline3.22
 WORKDIR /app
 COPY package.json ./
 RN npm install
