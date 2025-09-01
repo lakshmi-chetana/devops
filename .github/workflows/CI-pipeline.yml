@@ -56,7 +56,8 @@ jobs:
         with:
           name: dependency-scanning-artifact        
           path: npm-audit-report.json
-
+          
+          
       - name: build docker file
         run: docker build -t my-node-app .
 
