@@ -70,7 +70,7 @@ jobs:
         run: trivy image --exit-code 1 --severity HIGH,CRITICAL my-node-app
 
       - name: run tests inside docker
-        run: docker run -rm my-node-app npm test
+        run: docker run --rm my-node-app npm test
         
        
          
