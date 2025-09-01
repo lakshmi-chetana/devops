@@ -71,6 +71,17 @@ jobs:
 
       - name: run tests inside docker
         run: docker run --rm my-node-app npm test
-        
-       
+
+      - name: login to docker hub
+        run: echo "${{ secrets.DOCKER_HUB_TOKEN }}" | docker login -u ${{ secrets.DOCKER_HUB_USERNAME }} --password-stdin
+
+      - name: tag docker image
+        run: |
+         docker tag my-node-app ${{ secrets.DOCKER_HUB_USERNAME }}/my-node-app:dev-latest
+         docker tag my-node-app ${{ secrets.DOCKER_HUB_USERNAME }}/my-node-app:dev-${{ github.sha }}
+
+      - name: push docker image
+        run: |
+         docker push ${{ secrets.DOCKER_HUB_USERNAME }}/my-node-app:dev-latest
+         docker push ${{ secrets.DOCKER_HUB_USERNAME }}/my-node-app:dev-${{ github.sha }}
          
